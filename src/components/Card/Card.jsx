@@ -43,7 +43,7 @@ const Card = ({ allTask, getUserTask }) => {
                     task?.isCompleted === true ? "task-cmp " : "task-inc"
                   }
                 >
-                  {task?.isCompleted === true ? "Completed " : "incomlete"}
+                  {task?.isCompleted === true ? "Completed " : "incomplete"}
                 </h6>
               </div>
             </div>

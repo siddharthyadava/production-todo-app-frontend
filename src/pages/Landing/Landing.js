@@ -5,7 +5,7 @@ import Todo from "../../assets/images/Todo.jpg";
 import "./Landing.css";
 const Landing = () => {
   return (
-    <div className="hero">
+    <div className="hero p-5">
       <div className="intro-text">
         <h1>
           <span className="tagline1">Stay focused.</span> <br />
