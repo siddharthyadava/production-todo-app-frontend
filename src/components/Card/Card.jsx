@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import EditTodo from "../EditTodo";
 import toast from "react-hot-toast";
 import TodoServices from "../../Services/TodoServices";
+import "./Card.css";
 
 const Card = ({ allTask, getUserTask }) => {
   const [showModal, setShowModal] = useState(false);
@@ -46,9 +47,9 @@ const Card = ({ allTask, getUserTask }) => {
                 </div>
               </div>
               <div className="card-body">
-                <h6 style={{ fontWeight: "bold" }}>{task?.title}</h6>
-                <p className="card-text">{task?.description}</p>
-                <h6>Date : {task?.createdAt.substring(0, 10)}</h6>
+                <h6 className="card-title" style={{ fontWeight: "bold" }}>{task?.title}</h6>
+                <p className="card-text card-desc">{task?.description}</p>
+                <h6 className="card-date">Date : {task?.createdAt.substring(0, 10)}</h6>
               </div>
               <div className="card-footer bg-transparent border-primary">
                 <button

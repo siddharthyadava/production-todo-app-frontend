@@ -29,13 +29,13 @@
     justify-content: space-between;
 }
 .chead .task-inc{
-    background-color: #f7e373;
+    /* background-color: #f7e373; */
     padding: 5px 10px;
     font-family: cursive;
     border-radius: 5px;
 }
 .chead .task-cmp{
-    background-color: #adfa49;
+    /* background-color: #adfa49; */
     padding: 5px 10px;
     font-family: cursive;
     border-radius: 5px;

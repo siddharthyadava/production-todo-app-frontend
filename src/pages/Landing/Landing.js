@@ -1,19 +1,18 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import Hero from "../../assets/images/hero.jpg";
+// import Hero from "../../assets/images/hero.jpg";
+import Todo from "../../assets/images/Todo.jpg";
 import "./Landing.css";
 const Landing = () => {
   return (
     <div className="hero">
       <div className="intro-text">
         <h1>
-          <span className="tagline1">Organize work and life</span> <br />
-          <span className="tagline2">finally.</span>
+          <span className="tagline1">Stay focused.</span> <br />
+          <span className="tagline2">Stay Organized.</span>
         </h1>
-        <p>
-          type just anything into the tasdk field and TodoList <br />
-          on-of-its-kind natural langugae recognition will instantly fill your
-          to-do-list
+        <p style={{"color": "#6B6B6B"}}>
+          Turn thoughts into tasks instantly — just type and let the app organize everything for you.
         </p>
         <Link className="btn red" to="/register">
           Register Now!
@@ -23,7 +22,7 @@ const Landing = () => {
         </Link>
       </div>
       <div className="">
-        <img src={Hero} alt="heroimage" width={"100%"} height={515} />
+        <img src={Todo} alt="heroimage" width={"100%"} height={515} />
       </div>
     </div>
   );

@@ -1,52 +1,30 @@
 import axios from "axios";
 
-// BASE URL (Render ya Local)
+//get user token
+const user = JSON.parse(localStorage.getItem("todoapp"));
+
 const baseUrl = process.env.REACT_APP_BASEURL;
 
-// 🔐 Safe function to get token (without crashing)
-const getToken = () => {
-  try {
-    const raw = localStorage.getItem("todoapp");
-    if (!raw) return null;
+//default auth header
+axios.defaults.headers.common["Authorization"] = `bearer ${user.token}`;
 
-    const userData = JSON.parse(raw);
-
-    // userData.token OR userData.user.token
-    return userData?.token || userData?.user?.token || null;
-  } catch (err) {
-    console.error("Error reading user token:", err);
-    return null;
-  }
-};
-
-// 🔐 Token lagane ka safe method
-axios.interceptors.request.use((config) => {
-  const token = getToken();
-
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
-
-// CREATE TODO
+//CRETE TODO
 const createTodo = (data) => {
   return axios.post(`${baseUrl}/todo/create`, data);
 };
-
-// GET ALL TODO
-const getAllTodo = (userId) => {
-  return axios.post(`${baseUrl}/todo/getAll`, { userId });
+//GET ALL TODO
+const getAllTodo = (id) => {
+  return axios.post(`${baseUrl}/todo/getAll/${id}`);
 };
 
-// UPDATE TODO
+//UPDATE TODO
 const updateTodo = (id, data) => {
-  return axios.patch(`${baseUrl}/todo/update/${id}`, data);
+  return axios.patch(`${baseUrl}/todo/update/` + id, data);
 };
 
-// DELETE TODO
+//DLEETE TODO
 const deleteTodo = (id) => {
-  return axios.delete(`${baseUrl}/todo/delete/${id}`);
+  return axios.delete(`${baseUrl}/todo/delete/` + id);
 };
 
 const TodoServices = { createTodo, getAllTodo, updateTodo, deleteTodo };
