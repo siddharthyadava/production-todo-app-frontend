@@ -75,7 +75,7 @@ const EditTodo = ({ task, setShowModal, getUserTask }) => {
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                   ></textarea>
-                  <label htmlFor="floatigTextarea">Dscription</label>
+                  <label htmlFor="floatigTextarea">Description</label>
                 </div>
                 <div className="my-3">
                   <select className="form-select" onChange={handleSelectChange}>
