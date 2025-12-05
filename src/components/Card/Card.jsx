@@ -15,14 +15,30 @@ const Card = ({ allTask, getUserTask }) => {
   };
 
   // handle delete
+  // const handleDelete = async (id) => {
+  //   try {
+  //     await TodoServices.deleteTodo(id);
+  //     toast.success("Task Deleted Succesfully");
+  //     getUserTask();
+  //   } catch (error) {
+  //     console.log(error);
+  //     toast.error(error);
+  //   }
+  // };
+
+  // handle delete
   const handleDelete = async (id) => {
+    const isConfirmed = window.confirm("Are you sure you want to delete this task?");
+
+    if (!isConfirmed) return;
+
     try {
       await TodoServices.deleteTodo(id);
-      toast.success("Task Deleted Succesfully");
+      toast.success("Task Deleted Successfully");
       getUserTask();
     } catch (error) {
       console.log(error);
-      toast.error(error);
+      toast.error("Failed to delete task");
     }
   };
 
