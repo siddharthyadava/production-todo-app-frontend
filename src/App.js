@@ -6,6 +6,8 @@ import About from "./pages/About/About";
 import TodoList from "./pages/Todos/TodoList";
 import { Toaster } from "react-hot-toast";
 import HomePage from "./pages/Home/HomePage";
+import ForgotPassword from "./pages/Auth/ForgotPassword";
+import ResetPassword from "./pages/Auth/ResetPassword";
 
 function App() {
   return (
@@ -17,6 +19,9 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/about" element={<About />} />
         <Route path="/todoList" element={<TodoList />} />
+
+        <Route path="forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
       </Routes>
       <Toaster />
     </div>
