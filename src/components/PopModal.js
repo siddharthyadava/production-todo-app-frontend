@@ -1,6 +1,8 @@
 import React from "react";
 import toast from "react-hot-toast";
 import TodoServices from "../Services/TodoServices";
+import "./TaskModal.css";
+
 const PopModal = ({
   getUserTask,
   title,
@@ -10,93 +12,81 @@ const PopModal = ({
   showModal,
   setShowModal,
 }) => {
-  //handle close
   const handleClose = () => {
     setShowModal(false);
   };
-  //hanlde submit
-  const handleSubmit = async () => {
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     try {
-      const userData = JSON.parse(localStorage.getItem("todoapp"));
-      const createdBy = userData && userData.user.id;
+      const userData = JSON.parse(localStorage.getItem("todoapp") || "{}");
+      const createdBy = userData?.user?.id;
       const data = { title, description, createdBy };
+
       if (!title || !description) {
-        return toast.error("Please prvide title or description");
+        toast.error("Please provide title and description");
+        return;
       }
-      const todo = await TodoServices.createTodo(data);
+
+      await TodoServices.createTodo(data);
       setShowModal(false);
       getUserTask();
-      toast.success("Task Created Successfully");
-      console.log(todo);
       setTitle("");
       setDescription("");
+      toast.success("Task created successfully");
     } catch (error) {
       console.log(error);
-      toast.error(error);
+      toast.error("Unable to create task");
     }
   };
+
+  if (!showModal) return null;
+
   return (
-    <>
-      {showModal && (
-        <div
-          className="modal"
-          tabIndex="-1"
-          role="dialog"
-          style={{ display: "block", backgroundColor: "rgba(0,0,0,0.5)" }}
-        >
-          <div className="modal-dialog" role="document">
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title">Add New Task</h5>
-                <button
-                  className="btn-close"
-                  aria-label="close"
-                  onClick={handleClose}
-                >
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div className="modal-body">
-                <div className="mb-3">
-                  <label className="form-label">Title</label>
-                  <input
-                    type="text"
-                    className="form-control"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                  />
-                </div>
-                <div className="form-floating">
-                  <textarea
-                    className="form-control"
-                    id="floatigTextarea"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                  ></textarea>
-                  <label htmlFor="floatigTextarea">Description</label>
-                </div>
-              </div>
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  onClick={handleClose}
-                >
-                  close
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-primary"
-                  onClick={handleSubmit}
-                >
-                  Create
-                </button>
-              </div>
-            </div>
-          </div>
+    <div className="task-modal-overlay enter-fade" role="dialog" aria-modal="true">
+      <div className="task-modal glass-panel enter-up">
+        <div className="task-modal__header">
+          <h3>Create a new task</h3>
+          <button className="task-modal__close" type="button" onClick={handleClose}>
+            <i className="fa-solid fa-xmark" />
+          </button>
         </div>
-      )}
-    </>
+
+        <form className="task-modal__form" onSubmit={handleSubmit}>
+          <label className="task-modal__field" htmlFor="new-task-title">
+            Title
+            <input
+              id="new-task-title"
+              type="text"
+              value={title}
+              onChange={(event) => setTitle(event.target.value)}
+              placeholder="Example: Finish UI redesign"
+              required
+            />
+          </label>
+
+          <label className="task-modal__field" htmlFor="new-task-description">
+            Description
+            <textarea
+              id="new-task-description"
+              value={description}
+              onChange={(event) => setDescription(event.target.value)}
+              placeholder="Add some details for this task"
+              required
+            />
+          </label>
+
+          <div className="task-modal__actions">
+            <button className="task-modal__btn task-modal__btn--ghost" type="button" onClick={handleClose}>
+              Cancel
+            </button>
+            <button className="task-modal__btn task-modal__btn--solid" type="submit">
+              Create task
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
   );
 };
 

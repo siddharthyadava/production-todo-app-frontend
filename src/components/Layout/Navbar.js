@@ -1,74 +1,69 @@
-import React, { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import "./Navbar.css";
 
 const Navbar = () => {
   const [username, setUsername] = useState("");
-
+  const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
-  //logout function
+  useEffect(() => {
+    const userData = JSON.parse(localStorage.getItem("todoapp") || "{}");
+    setUsername(userData?.user?.username || "");
+  }, []);
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location.pathname]);
+
   const logoutHandler = () => {
     localStorage.removeItem("todoapp");
-    toast.success("logout successfully");
+    toast.success("Logged out successfully");
     navigate("/login");
   };
 
-  //get username
-  useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem("todoapp"));
-    console.log("username data ===>" + userData && userData.user.username);
-    setUsername(userData && userData.user.username);
-  }, []);
   return (
-    <div>
-      <nav className="navbar navbar-expand-lg bg-body-tertiary">
-        <div className="container-fluid">
+    <header className="app-nav-shell">
+      <nav className="app-nav page-shell">
+        <div className="app-nav__brand-wrap">
           <button
-            className="navbar-toggler"
+            className="app-nav__toggle"
             type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarTogglerDemo01"
-            aria-controls="navbarTogglerDemo01"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
+            aria-label="Toggle menu"
+            onClick={() => setMenuOpen((prev) => !prev)}
           >
-            <span className="navbar-toggler-icon" />
+            <i className={`fa-solid ${menuOpen ? "fa-xmark" : "fa-bars"}`} />
           </button>
-          <div className="collapse navbar-collapse" id="navbarTogglerDemo01">
-            <h4 className="navbar-brand">
-              <i className="fa-solid fa-user-tie" /> &nbsp;
-              <i>Welcome</i> {username}!
-            </h4>
-            <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
-              <li className="nav-item">
-                <Link
-                  className="nav-link active"
-                  aria-current="page"
-                  to="/home"
-                >
-                  Home
-                </Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/todoList">
-                  My todo List
-                </Link>
-              </li>
-              <li className="nav-item">
-                <button
-                  className="nav-link "
-                  title="logout"
-                  onClick={logoutHandler}
-                >
-                  <i className="fa-solid fa-power-off text-danger fa-2x" />
-                </button>
-              </li>
-            </ul>
-          </div>
+          <NavLink className="app-nav__brand" to="/home">
+            TaskPulse
+          </NavLink>
+          <p className="app-nav__welcome">
+            <i className="fa-solid fa-circle-user" /> Hi {username || "there"}
+          </p>
+        </div>
+
+        <div className={`app-nav__links ${menuOpen ? "is-open" : ""}`}>
+          <NavLink
+            className={({ isActive }) => `app-nav__link ${isActive ? "is-active" : ""}`}
+            to="/home"
+          >
+            Dashboard
+          </NavLink>
+          <NavLink
+            className={({ isActive }) => `app-nav__link ${isActive ? "is-active" : ""}`}
+            to="/todoList"
+          >
+            Task List
+          </NavLink>
+          <button className="app-nav__logout" type="button" onClick={logoutHandler}>
+            <i className="fa-solid fa-right-from-bracket" />
+            Log out
+          </button>
         </div>
       </nav>
-    </div>
+    </header>
   );
 };
 

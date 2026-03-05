@@ -37,4 +37,6 @@ const updateTodo = (id, data) =>
 const deleteTodo = (id) =>
   axios.delete(`${baseUrl}/todo/delete/${id}`);
 
-export default { createTodo, getAllTodo, updateTodo, deleteTodo };
+const TodoServices = { createTodo, getAllTodo, updateTodo, deleteTodo };
+
+export default TodoServices;

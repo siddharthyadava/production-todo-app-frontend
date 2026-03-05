@@ -8,10 +8,11 @@ import { Toaster } from "react-hot-toast";
 import HomePage from "./pages/Home/HomePage";
 import ForgotPassword from "./pages/Auth/ForgotPassword";
 import ResetPassword from "./pages/Auth/ResetPassword";
+import "./App.css";
 
 function App() {
   return (
-    <div>
+    <div className="app-root">
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/home" element={<HomePage />} />
@@ -23,7 +24,19 @@ function App() {
         <Route path="forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
       </Routes>
-      <Toaster />
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 2600,
+          style: {
+            borderRadius: "10px",
+            border: "1px solid #dbe4f3",
+            background: "#ffffff",
+            color: "#1e3a70",
+            boxShadow: "0 12px 22px rgba(15, 23, 42, 0.12)",
+          },
+        }}
+      />
     </div>
   );
 }

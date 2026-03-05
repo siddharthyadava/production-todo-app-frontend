@@ -1,0 +1,75 @@
+.todo-page {
+  padding-bottom: 1.8rem;
+}
+
+.todo-filter {
+  border-radius: var(--radius-xl);
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.todo-filter__eyebrow {
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  color: #51668f;
+}
+
+.todo-filter h1 {
+  margin-top: 0.2rem;
+  font-family: var(--font-heading);
+  font-size: clamp(1.2rem, 2.2vw, 1.6rem);
+}
+
+.todo-filter__controls {
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.todo-filter__chip {
+  border-radius: 999px;
+  border: 1px solid #d8e2f3;
+  background: #fff;
+  color: #405a86;
+  padding: 0.42rem 0.8rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  transition: transform 150ms ease, background-color 150ms ease, color 150ms ease;
+}
+
+.todo-filter__chip:hover {
+  transform: translateY(-1px);
+}
+
+.todo-filter__chip.is-active {
+  border-color: transparent;
+  color: #fff;
+  background: var(--accent-primary);
+}
+
+.todo-list-content {
+  margin-top: 0.85rem;
+}
+
+.todo-empty {
+  border-radius: var(--radius-lg);
+  text-align: center;
+  padding: 1rem;
+}
+
+.todo-empty h3 {
+  font-family: var(--font-heading);
+  font-size: 1.08rem;
+}
+
+.todo-empty p {
+  margin-top: 0.28rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}

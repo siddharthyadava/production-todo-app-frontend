@@ -8,61 +8,96 @@ import { getErrorMessage } from "../../Utils/ErrorMessage";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  //login function
-  const loginHandler = async (e) => {
+
+  const loginHandler = async (event) => {
+    event.preventDefault();
+
+    setLoading(true);
     try {
-      e.preventDefault();
-      const data = { email, password };
-      const res = await AuthServices.loginUSer(data);
+      const res = await AuthServices.loginUSer({ email, password });
       toast.success(res.data.message);
-      navigate("/home");
       localStorage.setItem("todoapp", JSON.stringify(res.data));
-      console.log(res.data);
-    } catch (err) {
-      toast.error(getErrorMessage(err));
-      console.log(err);
+      navigate("/home");
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="form-container">
-      <div className="form">
-        <div className="mb-3">
-          <i className="fa-solid fa-circle-user"></i>
+    <div className="auth-page">
+      <span className="auth-orb auth-orb--one" />
+      <span className="auth-orb auth-orb--two" />
+
+      <section className="auth-panel enter-up">
+        <aside className="auth-copy">
+          <span className="pill">
+            <i className="fa-solid fa-bolt" />
+            Welcome Back
+          </span>
+          <h1>Continue where you left off.</h1>
+          <p>Log in to manage your tasks, priorities, and progress in one place.</p>
+          <ul>
+            <li>
+              <i className="fa-solid fa-check-circle" />
+              Quick task creation
+            </li>
+            <li>
+              <i className="fa-solid fa-check-circle" />
+              Smooth edit and status updates
+            </li>
+            <li>
+              <i className="fa-solid fa-check-circle" />
+              Mobile friendly layout
+            </li>
+          </ul>
+        </aside>
+
+        <div className="auth-form-card">
+          <h2>Sign in</h2>
+          <p className="auth-subtitle">Use your account credentials to continue.</p>
+
+          <form className="auth-form" onSubmit={loginHandler}>
+            <div className="auth-field">
+              <label htmlFor="login-email">Email</label>
+              <input
+                id="login-email"
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                required
+              />
+            </div>
+
+            <div className="auth-field">
+              <label htmlFor="login-password">Password</label>
+              <input
+                id="login-password"
+                type="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                required
+              />
+            </div>
+
+            <button className="auth-submit" type="submit" disabled={loading}>
+              {loading ? "Signing in..." : "Sign in"}
+            </button>
+          </form>
+
+          <div className="auth-footer">
+            <p>
+              New here? <Link to="/register">Create an account</Link>
+            </p>
+            <Link to="/forgot-password">Forgot password?</Link>
+          </div>
         </div>
-        <div className="mb-3">
-          <input
-            type="email"
-            className="form-control"
-            placeholder="enter email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-        <div className="mb-3">
-          <input
-            type="password"
-            className="form-control"
-            placeholder="enter password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <div className="form-bottom">
-          <p className="text-center">
-            not a user? please
-            <Link to="/register"> Register</Link>
-          </p>
-          <button type="submit" className="login-btn" onClick={loginHandler}>
-            LOGIN
-          </button>
-          <p className="text-center mt-2">
-            <Link to="/forgot-password">Forgot Password</Link>
-          </p>
-        </div>
-      </div>
+      </section>
     </div>
   );
 };

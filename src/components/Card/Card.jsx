@@ -4,37 +4,33 @@ import toast from "react-hot-toast";
 import TodoServices from "../../Services/TodoServices";
 import "./Card.css";
 
+const formatDate = (dateString) => {
+  if (!dateString) return "N/A";
+  const date = new Date(dateString);
+  if (Number.isNaN(date.getTime())) return "N/A";
+  return date.toLocaleDateString(undefined, {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+};
+
 const Card = ({ allTask, getUserTask }) => {
   const [showModal, setShowModal] = useState(false);
-  const [currentTask, setCurrentTask] = useState(null); // ✅ which task is being edited
+  const [currentTask, setCurrentTask] = useState(null);
 
-  // handle edit
   const handleEdit = (task) => {
-    setCurrentTask(task);   // ✅ store selected task
+    setCurrentTask(task);
     setShowModal(true);
   };
 
-  // handle delete
-  // const handleDelete = async (id) => {
-  //   try {
-  //     await TodoServices.deleteTodo(id);
-  //     toast.success("Task Deleted Succesfully");
-  //     getUserTask();
-  //   } catch (error) {
-  //     console.log(error);
-  //     toast.error(error);
-  //   }
-  // };
-
-  // handle delete
   const handleDelete = async (id) => {
     const isConfirmed = window.confirm("Are you sure you want to delete this task?");
-
     if (!isConfirmed) return;
 
     try {
       await TodoServices.deleteTodo(id);
-      toast.success("Task Deleted Successfully");
+      toast.success("Task deleted successfully");
       getUserTask();
     } catch (error) {
       console.log(error);
@@ -44,55 +40,51 @@ const Card = ({ allTask, getUserTask }) => {
 
   return (
     <>
-      <div className="card-container">
-        {allTask?.map((task) => (
-          <div
-            className="card border-primary mb-3 mt-3"
-            style={{ maxWidth: "18rem" }}
-            key={task._id} // ✅ better key than index
+      <div className="task-grid">
+        {allTask?.map((task, index) => (
+          <article
+            className="task-card glass-panel enter-up"
+            key={task._id}
+            style={{ animationDelay: `${index * 60}ms` }}
           >
-            <div className="card-header">
-              <div className="chead">
-                <h6>{task?.title.substring(0, 10)}</h6>
-                <h6
-                  className={
-                    task?.isCompleted === true ? "task-cmp " : "task-inc"
-                  }
+            <header className="task-card__header">
+              <h3>{task?.title}</h3>
+              <span className={`task-status ${task?.isCompleted ? "is-completed" : "is-pending"}`}>
+                {task?.isCompleted ? "Completed" : "In progress"}
+              </span>
+            </header>
+
+            <p className="task-card__description">
+              {task?.description || "No description provided."}
+            </p>
+
+            <footer className="task-card__footer">
+              <span>
+                <i className="fa-regular fa-calendar" /> {formatDate(task?.createdAt)}
+              </span>
+              <div className="task-card__actions">
+                <button
+                  className="task-card__btn task-card__btn--edit"
+                  type="button"
+                  title="Edit task"
+                  onClick={() => handleEdit(task)}
                 >
-                  {task?.isCompleted === true ? "Completed " : "incomplete"}
-                </h6>
+                  <i className="fa-solid fa-pen-to-square" />
+                </button>
+                <button
+                  className="task-card__btn task-card__btn--delete"
+                  type="button"
+                  title="Delete task"
+                  onClick={() => handleDelete(task?._id)}
+                >
+                  <i className="fa-solid fa-trash" />
+                </button>
               </div>
-            </div>
-            <div className="card-body">
-              <h6 className="card-title" style={{ fontWeight: "bold" }}>
-                {task?.title}
-              </h6>
-              <p className="card-text card-desc">{task?.description}</p>
-              <h6 className="card-date">
-                Date : {task?.createdAt.substring(0, 10)}
-              </h6>
-            </div>
-            <div className="card-footer bg-transparent border-primary">
-              <button
-                className="btn btn-warning"
-                title="EDIT Task"
-                onClick={() => handleEdit(task)} // ✅ pass this task
-              >
-                <i className="fa-solid fa-pen-to-square"></i>
-              </button>
-              <button
-                className="btn btn-danger ms-2"
-                title="Delete Task"
-                onClick={() => handleDelete(task?._id)}
-              >
-                <i className="fa-solid fa-trash"></i>
-              </button>
-            </div>
-          </div>
+            </footer>
+          </article>
         ))}
       </div>
 
-      {/* ✅ single modal, outside the map */}
       {showModal && currentTask && (
         <EditTodo
           task={currentTask}

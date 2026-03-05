@@ -1,9 +1,10 @@
-import "../components/Spinner.css";
+import "./Spinner.css";
 
 const Spinner = () => {
   return (
-    <div className="fullscreen-loader">
-      <div className="loader"></div>
+    <div className="app-loader-wrap">
+      <div className="app-loader" />
+      <p>Loading tasks...</p>
     </div>
   );
 };

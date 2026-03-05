@@ -1,93 +1,106 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../../components/Layout/Navbar";
 import TodoServices from "../../Services/TodoServices";
 import Spinner from "../../components/Spinner";
+import Card from "../../components/Card/Card";
+import "./TodoList.css";
+
+const readUserData = () => {
+  try {
+    return JSON.parse(localStorage.getItem("todoapp") || "{}");
+  } catch (error) {
+    return {};
+  }
+};
 
 const TodoList = () => {
-  const [todoStatus, setTodosStatus] = useState("");
-  const [filterdTask, setFilterdTask] = useState([]);
+  const [statusFilter, setStatusFilter] = useState("all");
   const [loading, setLoading] = useState(false);
   const [allTask, setAllTask] = useState([]);
+  const navigate = useNavigate();
+  const userData = readUserData();
+  const userId = userData?.user?.id;
 
-  //get User todos
-  const userData = JSON.parse(localStorage.getItem("todoapp"));
-  const id = userData && userData?.user.id;
-  console.log(id);
-  const getUserTask = async () => {
+  const getUserTask = useCallback(async () => {
+    if (!userId) return;
+
     setLoading(true);
     try {
-      const { data } = await TodoServices.getAllTodo(id);
-      setLoading(false);
-      // console.log(data);
-      setAllTask(data?.todos);
+      const { data } = await TodoServices.getAllTodo(userId);
+      setAllTask(data?.todos || []);
     } catch (error) {
-      setLoading(false);
       console.log(error);
+    } finally {
+      setLoading(false);
     }
-  };
+  }, [userId]);
 
   useEffect(() => {
-    const incomplete = allTask?.filter((item) => item?.isCompleted === false);
-    const completed = allTask?.filter((item) => item?.isCompleted === true);
-    if (todoStatus === "incomplete") {
-      setFilterdTask(incomplete);
-    } else if (todoStatus === "completed") {
-      setFilterdTask(completed);
+    if (!userId) {
+      navigate("/login");
+      return;
     }
     getUserTask();
-  }, [todoStatus]);
+  }, [getUserTask, navigate, userId]);
+
+  const filteredTasks = useMemo(() => {
+    if (statusFilter === "completed") {
+      return allTask.filter((task) => task.isCompleted === true);
+    }
+    if (statusFilter === "incomplete") {
+      return allTask.filter((task) => task.isCompleted === false);
+    }
+    return allTask;
+  }, [allTask, statusFilter]);
 
   return (
     <>
       <Navbar />
-      <div className="filter-container">
-        <h4>Filter Todos by </h4>
-        <div className="filter-group">
-          <select
-            className="form-select"
-            onChange={(e) => setTodosStatus(e.target.value)}
-          >
-            <option selected>Select Status</option>
-            <option value="incomplete">Incomplete</option>
-            <option value="completed">completed</option>
-          </select>
-        </div>
-      </div>
-      {/* ================= */}
-      {loading && <Spinner />}
-      <div className="card-container">
-        {filterdTask?.length === 0 ? (
-          <h1 className="no-task"> No task Found</h1>
-        ) : (
-          filterdTask?.map((task, i) => (
-            <>
-              <div
-                className="card border-primary mb-3 mt-3"
-                style={{ maxWidth: "18rem" }}
-                key={i}
-              >
-                <div className="card-header">
-                  <div className="chead">
-                    <h6>{task?.title.substring(0, 10)}</h6>
-                    <h6
-                      className={
-                        task?.isCompleted === true ? "task-cmp " : "task-inc"
-                      }
-                    >
-                      {task?.isCompleted === true ? "Completed " : "incomlete"}
-                    </h6>
-                  </div>
-                </div>
-                <div className="card-body">
-                  <h6 style={{ fontWeight: "bold" }}>{task?.title}</h6>
-                  <p className="card-text">{task?.description}</p>
-                  <h6>Date : {task?.createdAt.substring(0, 10)}</h6>
-                </div>
-              </div>
-            </>
-          ))
-        )}
-      </div>
+      <main className="todo-page page-shell enter-fade">
+        <section className="todo-filter glass-panel enter-up">
+          <div>
+            <p className="todo-filter__eyebrow">Task Gallery</p>
+            <h1>Browse your tasks by status</h1>
+          </div>
+          <div className="todo-filter__controls">
+            <button
+              type="button"
+              className={`todo-filter__chip ${statusFilter === "all" ? "is-active" : ""}`}
+              onClick={() => setStatusFilter("all")}
+            >
+              All
+            </button>
+            <button
+              type="button"
+              className={`todo-filter__chip ${statusFilter === "incomplete" ? "is-active" : ""}`}
+              onClick={() => setStatusFilter("incomplete")}
+            >
+              Incomplete
+            </button>
+            <button
+              type="button"
+              className={`todo-filter__chip ${statusFilter === "completed" ? "is-active" : ""}`}
+              onClick={() => setStatusFilter("completed")}
+            >
+              Completed
+            </button>
+          </div>
+        </section>
+
+        <section className="todo-list-content enter-up">
+          {loading ? (
+            <Spinner />
+          ) : filteredTasks.length ? (
+            <Card allTask={filteredTasks} getUserTask={getUserTask} />
+          ) : (
+            <div className="todo-empty glass-panel">
+              <h3>No tasks in this filter</h3>
+              <p>Switch filters or create a new task from your dashboard.</p>
+            </div>
+          )}
+        </section>
+      </main>
     </>
   );
 };

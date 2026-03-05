@@ -9,9 +9,8 @@ const ForgotPassword = () => {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const submitHandler = async (e) => {
-    e.preventDefault();
-
+  const submitHandler = async (event) => {
+    event.preventDefault();
     if (!email) {
       toast.error("Please enter email");
       return;
@@ -20,14 +19,10 @@ const ForgotPassword = () => {
     setLoading(true);
     try {
       const res = await AuthServices.forgotPassword({ email });
-
-      if (res.data && res.data.success) {
+      if (res.data?.success) {
         toast.success(res.data.message || "Reset link sent if email exists");
       } else {
-        toast.error(
-          (res.data && res.data.message) ||
-            "Something went wrong, please try again"
-        );
+        toast.error(res.data?.message || "Something went wrong, please try again");
       }
     } catch (error) {
       toast.error(getErrorMessage(error));
@@ -37,30 +32,64 @@ const ForgotPassword = () => {
   };
 
   return (
-    <div className="form-container">
-      <form className="form" onSubmit={submitHandler}>
-        <div className="mb-3">
-          <i className="fa-solid fa-circle-user"></i>
-        </div>
-        <div className="mb-3">
-          <input
-            type="email"
-            className="form-control"
-            placeholder="enter email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
+    <div className="auth-page">
+      <span className="auth-orb auth-orb--one" />
+      <span className="auth-orb auth-orb--two" />
 
-        <div className="form-bottom">
-          <p className="text-center">
-            ⬅️ <Link to="/login">Back to Login</Link>
+      <section className="auth-panel enter-up">
+        <aside className="auth-copy">
+          <span className="pill">
+            <i className="fa-solid fa-shield-heart" />
+            Secure Recovery
+          </span>
+          <h1>Reset your password safely.</h1>
+          <p>
+            Enter your registered email and we will send a reset link if your account
+            exists.
           </p>
-          <button type="submit" className="login-btn" disabled={loading}>
-            {loading ? "Sending..." : "Send Reset Link"}
-          </button>
+          <ul>
+            <li>
+              <i className="fa-solid fa-check-circle" />
+              One-time reset token
+            </li>
+            <li>
+              <i className="fa-solid fa-check-circle" />
+              Link expiration protection
+            </li>
+            <li>
+              <i className="fa-solid fa-check-circle" />
+              Private account lookup
+            </li>
+          </ul>
+        </aside>
+
+        <div className="auth-form-card">
+          <h2>Forgot password</h2>
+          <p className="auth-subtitle">We will send a reset link to your email.</p>
+
+          <form className="auth-form" onSubmit={submitHandler}>
+            <div className="auth-field">
+              <label htmlFor="forgot-email">Email</label>
+              <input
+                id="forgot-email"
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                required
+              />
+            </div>
+
+            <button className="auth-submit" type="submit" disabled={loading}>
+              {loading ? "Sending..." : "Send reset link"}
+            </button>
+          </form>
+
+          <div className="auth-footer">
+            <Link to="/login">Back to login</Link>
+          </div>
         </div>
-      </form>
+      </section>
     </div>
   );
 };

@@ -6,26 +6,23 @@ import toast from "react-hot-toast";
 import { getErrorMessage } from "../../Utils/ErrorMessage";
 
 const ResetPassword = () => {
-  const { token } = useParams(); // from /reset-password/:token
+  const { token } = useParams();
   const navigate = useNavigate();
-
   const [password, setPassword] = useState("");
-  const [confirm, setConfirm] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const submitHandler = async (e) => {
-    e.preventDefault();
+  const submitHandler = async (event) => {
+    event.preventDefault();
 
-    if (!password || !confirm) {
+    if (!password || !confirmPassword) {
       toast.error("Please fill all fields");
       return;
     }
-
-    if (password !== confirm) {
+    if (password !== confirmPassword) {
       toast.error("Passwords do not match");
       return;
     }
-
     if (password.length < 6) {
       toast.error("Password must be at least 6 characters");
       return;
@@ -34,15 +31,11 @@ const ResetPassword = () => {
     setLoading(true);
     try {
       const res = await AuthServices.resetPassword(token, { password });
-
-      if (res.data && res.data.success) {
+      if (res.data?.success) {
         toast.success(res.data.message || "Password reset successfully");
         navigate("/login");
       } else {
-        toast.error(
-          (res.data && res.data.message) ||
-            "Failed to reset password. Try again."
-        );
+        toast.error(res.data?.message || "Failed to reset password. Try again.");
       }
     } catch (error) {
       toast.error(getErrorMessage(error));
@@ -52,41 +45,75 @@ const ResetPassword = () => {
   };
 
   return (
-    <div className="form-container">
-      <form className="form" onSubmit={submitHandler}>
-        <div className="mb-3">
-          <i className="fa-solid fa-circle-user"></i>
-        </div>
+    <div className="auth-page">
+      <span className="auth-orb auth-orb--one" />
+      <span className="auth-orb auth-orb--two" />
 
-        <div className="mb-3">
-          <input
-            type="password"
-            className="form-control"
-            placeholder="new password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
+      <section className="auth-panel enter-up">
+        <aside className="auth-copy">
+          <span className="pill">
+            <i className="fa-solid fa-key" />
+            Update Credentials
+          </span>
+          <h1>Set a fresh password for your account.</h1>
+          <p>Create a new secure password and continue using your dashboard.</p>
+          <ul>
+            <li>
+              <i className="fa-solid fa-check-circle" />
+              Password validation before submit
+            </li>
+            <li>
+              <i className="fa-solid fa-check-circle" />
+              Secure token-based reset flow
+            </li>
+            <li>
+              <i className="fa-solid fa-check-circle" />
+              Redirect to sign-in after success
+            </li>
+          </ul>
+        </aside>
 
-        <div className="mb-3">
-          <input
-            type="password"
-            className="form-control"
-            placeholder="confirm password"
-            value={confirm}
-            onChange={(e) => setConfirm(e.target.value)}
-          />
-        </div>
+        <div className="auth-form-card">
+          <h2>Reset password</h2>
+          <p className="auth-subtitle">Your new password must be at least 6 characters.</p>
 
-        <div className="form-bottom">
-          <p className="text-center">
-            ⬅️ <Link to="/login">Back to Login</Link>
-          </p>
-          <button type="submit" className="login-btn" disabled={loading}>
-            {loading ? "Updating..." : "Update Password"}
-          </button>
+          <form className="auth-form" onSubmit={submitHandler}>
+            <div className="auth-field">
+              <label htmlFor="new-password">New password</label>
+              <input
+                id="new-password"
+                type="password"
+                placeholder="Enter new password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                required
+                minLength={6}
+              />
+            </div>
+
+            <div className="auth-field">
+              <label htmlFor="confirm-password">Confirm password</label>
+              <input
+                id="confirm-password"
+                type="password"
+                placeholder="Re-enter new password"
+                value={confirmPassword}
+                onChange={(event) => setConfirmPassword(event.target.value)}
+                required
+                minLength={6}
+              />
+            </div>
+
+            <button className="auth-submit" type="submit" disabled={loading}>
+              {loading ? "Updating..." : "Update password"}
+            </button>
+          </form>
+
+          <div className="auth-footer">
+            <Link to="/login">Back to login</Link>
+          </div>
         </div>
-      </form>
+      </section>
     </div>
   );
 };

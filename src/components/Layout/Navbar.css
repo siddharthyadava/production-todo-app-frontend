@@ -1,0 +1,131 @@
+.app-nav-shell {
+  padding: 0.95rem 0;
+}
+
+.app-nav {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--surface-border);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  padding: 0.65rem 0.85rem;
+}
+
+.app-nav__brand-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.72rem;
+}
+
+.app-nav__toggle {
+  display: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid #d7e1f3;
+  background: #fff;
+  color: #35518a;
+}
+
+.app-nav__brand {
+  font-family: var(--font-heading);
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: #244383;
+}
+
+.app-nav__welcome {
+  font-size: 0.85rem;
+  color: #5a6d90;
+  display: flex;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.app-nav__welcome i {
+  color: #3b82f6;
+}
+
+.app-nav__links {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.app-nav__link {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #334f84;
+  border-radius: 9px;
+  padding: 0.45rem 0.78rem;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.app-nav__link:hover {
+  background: #edf3ff;
+}
+
+.app-nav__link.is-active {
+  color: #1f4da8;
+  background: #e8f0ff;
+}
+
+.app-nav__logout {
+  border: 1px solid #f3d1d1;
+  border-radius: 9px;
+  background: #fff5f5;
+  color: #c13b3b;
+  padding: 0.42rem 0.72rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.33rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+@media (max-width: 840px) {
+  .app-nav__toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .app-nav__welcome {
+    display: none;
+  }
+
+  .app-nav__links {
+    position: absolute;
+    top: calc(100% + 0.4rem);
+    left: 0;
+    right: 0;
+    display: grid;
+    gap: 0.45rem;
+    border-radius: 12px;
+    border: 1px solid var(--surface-border);
+    background: var(--surface);
+    box-shadow: var(--shadow-sm);
+    padding: 0.65rem;
+    opacity: 0;
+    transform: translateY(-6px);
+    pointer-events: none;
+    transition: opacity 160ms ease, transform 160ms ease;
+    z-index: 100;
+  }
+
+  .app-nav__links.is-open {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .app-nav__link,
+  .app-nav__logout {
+    width: 100%;
+    justify-content: center;
+  }
+}

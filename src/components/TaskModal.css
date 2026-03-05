@@ -1,0 +1,96 @@
+.task-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(15, 23, 42, 0.4);
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+}
+
+.task-modal {
+  width: min(500px, 94vw);
+  border-radius: var(--radius-xl);
+  padding: 1rem;
+}
+
+.task-modal__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.task-modal__header h3 {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+}
+
+.task-modal__close {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #d9e2f0;
+  border-radius: 8px;
+  background: #fff;
+  color: #415f96;
+}
+
+.task-modal__form {
+  margin-top: 0.78rem;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.task-modal__field {
+  display: grid;
+  gap: 0.28rem;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #2f4a79;
+}
+
+.task-modal__field input,
+.task-modal__field textarea,
+.task-modal__field select {
+  border: 1px solid #d7e2f2;
+  border-radius: 10px;
+  background: #fff;
+  padding: 0.66rem 0.74rem;
+}
+
+.task-modal__field textarea {
+  min-height: 95px;
+  resize: vertical;
+}
+
+.task-modal__field input:focus,
+.task-modal__field textarea:focus,
+.task-modal__field select:focus {
+  outline: none;
+  border-color: rgba(37, 99, 235, 0.62);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.task-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.45rem;
+}
+
+.task-modal__btn {
+  border: none;
+  border-radius: 9px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  padding: 0.6rem 0.8rem;
+}
+
+.task-modal__btn--ghost {
+  background: #eef3ff;
+  color: #355389;
+}
+
+.task-modal__btn--solid {
+  background: var(--accent-primary);
+  color: #fff;
+}
