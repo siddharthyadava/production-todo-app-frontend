@@ -64,7 +64,7 @@ const ResetPassword = () => {
             </li>
             <li>
               <i className="fa-solid fa-check-circle" />
-              Secure token-based reset flow
+              OTP-verified reset flow
             </li>
             <li>
               <i className="fa-solid fa-check-circle" />

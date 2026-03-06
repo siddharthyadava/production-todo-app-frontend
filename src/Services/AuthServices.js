@@ -12,12 +12,16 @@ const loginUSer = (data) => {
 
 const forgotPassword = (data) => {
   return axios.post(`${baseUrl}/user/forgot-password`, data);
-}
+};
+
+const verifyResetOtp = (data) => {
+  return axios.post(`${baseUrl}/user/verify-reset-otp`, data);
+};
 
 const resetPassword = (token, data) => {
   return axios.post(`${baseUrl}/user/reset-password/${token}`, data);
-}
+};
 
-const AuthServices = { registerUser, loginUSer, forgotPassword, resetPassword };
+const AuthServices = { registerUser, loginUSer, forgotPassword, verifyResetOtp, resetPassword };
 
 export default AuthServices;
