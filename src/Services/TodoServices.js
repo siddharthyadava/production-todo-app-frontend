@@ -1,41 +1,32 @@
 import axios from "axios";
 
-// Base URL
 const baseUrl = process.env.REACT_APP_BASEURL;
 
-// Read user from localStorage safely
-const storedUser = localStorage.getItem("todoapp");
-let token = null;
-
-if (storedUser) {
+const getAuthConfig = () => {
   try {
-    const user = JSON.parse(storedUser);
-    token = user?.token || null;
-  } catch (err) {
-    console.error("Error parsing user data:", err);
+    const storedUser = localStorage.getItem("todoapp");
+    const token = storedUser ? JSON.parse(storedUser)?.token : null;
+
+    return token
+      ? {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      : {};
+  } catch (error) {
+    console.error("Error parsing user data:", error);
+    return {};
   }
-}
+};
 
-// Set default auth header ONLY if token exists
-if (token) {
-  axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-}
+const createTodo = (data) => axios.post(`${baseUrl}/todo/create`, data, getAuthConfig());
 
-// ------- SERVICE FUNCTIONS -------
+const getAllTodo = (id) => axios.post(`${baseUrl}/todo/getAll/${id}`, {}, getAuthConfig());
 
-// CREATE TODO
-const createTodo = (data) => axios.post(`${baseUrl}/todo/create`, data);
+const updateTodo = (id, data) => axios.patch(`${baseUrl}/todo/update/${id}`, data, getAuthConfig());
 
-// GET ALL TODO
-const getAllTodo = (id) => axios.post(`${baseUrl}/todo/getAll/${id}`);
-
-// UPDATE TODO
-const updateTodo = (id, data) =>
-  axios.patch(`${baseUrl}/todo/update/${id}`, data);
-
-// DELETE TODO
-const deleteTodo = (id) =>
-  axios.delete(`${baseUrl}/todo/delete/${id}`);
+const deleteTodo = (id) => axios.delete(`${baseUrl}/todo/delete/${id}`, getAuthConfig());
 
 const TodoServices = { createTodo, getAllTodo, updateTodo, deleteTodo };
 
